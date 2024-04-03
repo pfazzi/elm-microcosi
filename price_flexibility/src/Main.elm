@@ -1,55 +1,108 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, input, text, button)
+import Html exposing (Html, button, div, input, text)
 import Html.Events exposing (onClick, onInput)
+import Json.Decode exposing (Decoder, decodeValue, errorToString, field, float, map)
 import String
+
+
+port onEvent : (Json.Decode.Value -> msg) -> Sub msg
+
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
+    Browser.element
         { init = init
         , update = update
         , view = view
+        , subscriptions = subscriptions
         }
 
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    onEvent
+        (\jsonValue ->
+            case decodeValue eventDecoder jsonValue of
+                Ok data ->
+                    EventReceived data
+
+                Err errorMsg ->
+                    Debug.log (errorToString errorMsg) NoOp
+        )
+
+
 type alias Model =
-    { price : String
-    , discount : String
-    , finalPrice : String
+    { price : Float
+    , discount : Float
+    , finalPrice : Float
     }
 
-init : Model
-init =
-    { price = "100"
-    , discount = ""
-    , finalPrice = "100"
-    }
 
-type Msg = ApplyDiscount | SetDiscount String
+init : () -> ( Model, Cmd Msg )
+init _ =
+    let
+        initialModel =
+            { price = 0
+            , discount = 0
+            , finalPrice = 0
+            }
+    in
+    ( initialModel, Cmd.none )
 
-update : Msg -> Model -> Model
+
+type Msg
+    = ApplyDiscount
+    | SetDiscount Float
+    | EventReceived TotalPriceChanged
+    | NoOp
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        EventReceived payload ->
+            ( { model | price = payload.totalPrice }, Cmd.none )
+
         SetDiscount discount ->
-            { model | discount = discount}
+            ( { model | discount = discount }, Cmd.none )
 
         ApplyDiscount ->
             let
-                discountValue = String.toFloat model.discount
-                priceValue = String.toFloat model.price
+                discountValue =
+                    model.discount
+
+                priceValue =
+                    model.price
+
                 finalPrice =
-                    case (priceValue, discountValue) of
-                        (Just p, Just d) -> p - d
-                        _ -> 0
+                    case ( priceValue, discountValue ) of
+                        ( p, d ) ->
+                            p - d
             in
-                { model | finalPrice = String.fromFloat finalPrice}
+            ( { model | finalPrice = finalPrice }, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
     div []
-        [ div [] [ text ("Prezzo Base: " ++ model.price) ]
-        , input [ onInput SetDiscount ] [ ]
+        [ div [] [ text ("Prezzo Base: " ++ String.fromFloat model.price) ]
+        , input [ onInput (\discount -> SetDiscount (Maybe.withDefault 0 (String.toFloat discount))) ] []
         , button [ onClick ApplyDiscount ] [ text "Applica Sconto Commerciale" ]
-        , div [] [ text ("Prezzo Finale: " ++ model.finalPrice) ]
+        , div [] [ text ("Prezzo Finale: " ++ String.fromFloat model.finalPrice) ]
         ]
+
+
+type alias TotalPriceChanged =
+    { totalPrice : Float
+    }
+
+
+eventDecoder : Decoder TotalPriceChanged
+eventDecoder =
+    map TotalPriceChanged
+        (field "totalPrice" float)
