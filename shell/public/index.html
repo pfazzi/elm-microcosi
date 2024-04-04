@@ -3,12 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Sales Flow App</title>
+    <style>
+        .box {
+            border: 1px solid black;
+            padding: 10px
+        }
+
+        .mt {
+            margin-top: 20px
+        }
+    </style>
 </head>
 <body>
-<div id="app"></div>
+<div class="box">
+    <div id="app"></div>
 
-<price-flexibility></price-flexibility>
-<covers-list></covers-list>
+    <div class="box">
+        <h1>Team A</h1>
+        <price-flexibility></price-flexibility>
+    </div>
+
+    <div class="box mt">
+        <h1>Team B</h1>
+        <covers-list></covers-list>
+    </div>
+</div>
 
 <script src="http://localhost:8003/bundle.js"></script>
 <script src="http://localhost:8004/bundle.js"></script>

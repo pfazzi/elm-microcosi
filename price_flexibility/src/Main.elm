@@ -62,30 +62,24 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        EventReceived payload ->
-            ( { model | price = payload.totalPrice }, Cmd.none )
+        EventReceived totalPriceChanged ->
+            ( modelWithPriceUpdated totalPriceChanged.totalPrice model.discount, Cmd.none )
 
         SetDiscount discount ->
             ( { model | discount = discount }, Cmd.none )
 
         ApplyDiscount ->
-            let
-                discountValue =
-                    model.discount
-
-                priceValue =
-                    model.price
-
-                finalPrice =
-                    case ( priceValue, discountValue ) of
-                        ( p, d ) ->
-                            p - d
-            in
-            ( { model | finalPrice = finalPrice }, Cmd.none )
+            ( modelWithPriceUpdated model.price model.discount, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
 
+modelWithPriceUpdated : Float -> Float -> Model
+modelWithPriceUpdated price discountValue =
+    { price = price
+    , discount = discountValue
+    , finalPrice = price - discountValue
+    }
 
 view : Model -> Html Msg
 view model =
