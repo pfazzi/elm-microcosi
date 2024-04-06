@@ -3,7 +3,8 @@
     "start": "npm-run-all --parallel start:*",
     "start:shell": "cd shell && npm start",
     "start:covers_list": "cd covers_list && npm start",
-    "start:price_flexibility": "cd price_flexibility && npm start"
+    "start:price_flexibility": "cd price_flexibility && npm start",
+    "start:totals": "cd totals && npm start"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
