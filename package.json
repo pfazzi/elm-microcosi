@@ -4,9 +4,13 @@
     "start:shell": "cd shell && npm start",
     "start:covers_list": "cd covers_list && npm start",
     "start:price_flexibility": "cd price_flexibility && npm start",
-    "start:totals": "cd totals && npm start"
+    "start:totals": "cd totals && npm start",
+    "test:price_flexibility:pact": "cd price_flexibility && jest price_flexibility.pact.test.js --runInBand"
   },
   "devDependencies": {
+    "@pact-foundation/pact": "^15.0.1",
+    "jest": "^29.7.0",
+    "jsdom": "^26.1.0",
     "npm-run-all": "^4.1.5"
   }
 }

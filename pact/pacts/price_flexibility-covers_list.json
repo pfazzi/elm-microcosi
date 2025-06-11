@@ -1,0 +1,37 @@
+{
+  "consumer": {
+    "name": "price_flexibility"
+  },
+  "messages": [
+    {
+      "contents": {
+        "totalPrice": 123.45
+      },
+      "description": "covers_list.total_price_changed",
+      "metadata": {
+        "content-type": "application/json",
+        "contentType": "application/json"
+      },
+      "providerStates": [
+        {
+          "name": "a total price was calculated"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "15.0.1"
+    },
+    "pactRust": {
+      "ffi": "0.4.22",
+      "models": "1.2.3"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "covers_list"
+  }
+}
