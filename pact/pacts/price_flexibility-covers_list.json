@@ -7,14 +7,14 @@
       "contents": {
         "totalPrice": 123.45
       },
-      "description": "covers_list.total_price_changed",
+      "description": "the covers_list.total_price_changed message",
       "metadata": {
         "content-type": "application/json",
         "contentType": "application/json"
       },
       "providerStates": [
         {
-          "name": "a total price was calculated"
+          "name": "the user changed the policy configuration"
         }
       ]
     }
