@@ -19,15 +19,13 @@ describe("Pact consumer test", () => {
 
         global.window = dom.window;
 
-        // 2. importa e inizializza Elm app minimale con decoder
         const Elm = require("./dist/decoder-app.js").Elm;
         const app = Elm.DecoderApp.init();
 
-        // 3. verifica con Pact che il messaggio sia accettato
         return pact
-            .given("a total price was calculated")
-            .expectsToReceive("covers_list.total_price_changed")
-            .withContent({ totalPrice: 123.45 }) // messaggio JSON da validare
+            .given("the user changed the policy configuration")
+            .expectsToReceive("the covers_list.total_price_changed message")
+            .withContent({ totalPrice: 123.45 })
             .withMetadata({ "content-type": "application/json" })
             .verify((message) => {
                 return new Promise((resolve, reject) => {
